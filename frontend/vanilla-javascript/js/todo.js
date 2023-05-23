@@ -1,4 +1,4 @@
-const baseUrl = 'http://192.168.0.149:4000/v1';
+const baseUrl = 'http://localhost:4000/v1';
 
 window.onload = function() {
   getTodos();
