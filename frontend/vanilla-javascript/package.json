@@ -1,0 +1,9 @@
+{
+  "name": "todo-frontend-javascript",
+  "version": "1.0.0",
+  "description": "",
+  "author": "Efren Fuentes",
+  "devDependencies": {
+    "tailwindcss": "^3.2.1"
+  }
+}
