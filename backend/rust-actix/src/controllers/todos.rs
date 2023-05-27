@@ -1,10 +1,10 @@
-use actix_web::{delete, get, post, put, web, Responder};
 use actix_web::http::StatusCode;
+use actix_web::{delete, get, post, put, web, Responder};
 
-use crate::models::todo::{TodoPayload};
-use crate::models::todo;
-use crate::DbPool;
 use crate::helpers;
+use crate::models::todo;
+use crate::models::todo::TodoPayload;
+use crate::DbPool;
 
 #[get("")]
 async fn index(pool: web::Data<DbPool>) -> impl Responder {
@@ -24,7 +24,7 @@ async fn show(path: web::Path<i32>, pool: web::Data<DbPool>) -> impl Responder {
 
     match todo {
         Ok(todo) => helpers::response::json_response(StatusCode::OK, "todo", todo),
-        Err(e) => helpers::response::json_error_db_response(e)
+        Err(e) => helpers::response::json_error_db_response(e),
     }
 }
 
@@ -35,12 +35,16 @@ async fn create(pool: web::Data<DbPool>, payload: web::Json<TodoPayload>) -> imp
 
     match new_todo {
         Ok(todo) => helpers::response::json_response(StatusCode::OK, "todo", todo),
-        Err(e) => helpers::response::json_error_db_response(e)
+        Err(e) => helpers::response::json_error_db_response(e),
     }
 }
 
 #[put("/{id}")]
-async fn update(path: web::Path<i32>, pool: web::Data<DbPool>, payload: web::Json<TodoPayload>) -> impl Responder {
+async fn update(
+    path: web::Path<i32>,
+    pool: web::Data<DbPool>,
+    payload: web::Json<TodoPayload>,
+) -> impl Responder {
     let mut conn = pool.get().unwrap();
 
     let todo_id = path.into_inner();
@@ -49,7 +53,7 @@ async fn update(path: web::Path<i32>, pool: web::Data<DbPool>, payload: web::Jso
 
     match updated_todo {
         Ok(todo) => helpers::response::json_response(StatusCode::OK, "todo", todo),
-        Err(e) => helpers::response::json_error_db_response(e)
+        Err(e) => helpers::response::json_error_db_response(e),
     }
 }
 
@@ -63,6 +67,6 @@ async fn delete(path: web::Path<i32>, pool: web::Data<DbPool>) -> impl Responder
 
     match todo {
         Ok(todo) => helpers::response::json_response(StatusCode::OK, "todo", todo),
-        Err(e) => helpers::response::json_error_db_response(e)
+        Err(e) => helpers::response::json_error_db_response(e),
     }
 }

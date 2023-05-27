@@ -1,11 +1,11 @@
 use serde::{Deserialize, Serialize};
 
-use crate::models::schema::todos;
 use crate::models::errors::DbError;
-use diesel::PgConnection;
-use diesel::RunQueryDsl;
+use crate::models::schema::todos;
 use chrono::NaiveDateTime;
 use diesel::prelude::*;
+use diesel::PgConnection;
+use diesel::RunQueryDsl;
 
 #[derive(Debug, Serialize, Deserialize, Queryable)]
 pub struct Todo {
@@ -54,9 +54,7 @@ pub fn all(conn: &mut PgConnection) -> Result<Vec<Todo>, DbError> {
 pub fn find(todo_id: i32, conn: &mut PgConnection) -> Result<Todo, DbError> {
     use crate::models::todo::todos::dsl::*;
 
-    let res = todos
-        .find(todo_id)
-        .first::<Todo>(conn);
+    let res = todos.find(todo_id).first::<Todo>(conn);
 
     match res {
         Ok(todo) => Ok(todo),
@@ -64,7 +62,11 @@ pub fn find(todo_id: i32, conn: &mut PgConnection) -> Result<Todo, DbError> {
     }
 }
 
-pub fn update(todo_id: i32, changes: TodoPayload, conn: &mut PgConnection) -> Result<Todo, DbError> {
+pub fn update(
+    todo_id: i32,
+    changes: TodoPayload,
+    conn: &mut PgConnection,
+) -> Result<Todo, DbError> {
     use crate::models::todo::todos::dsl::*;
 
     let res = diesel::update(todos.find(todo_id))
@@ -80,8 +82,7 @@ pub fn update(todo_id: i32, changes: TodoPayload, conn: &mut PgConnection) -> Re
 pub fn delete(todo_id: i32, conn: &mut PgConnection) -> Result<Todo, DbError> {
     use crate::models::todo::todos::dsl::*;
 
-    let res = diesel::delete(todos.find(todo_id))
-        .get_result::<Todo>(conn);
+    let res = diesel::delete(todos.find(todo_id)).get_result::<Todo>(conn);
 
     match res {
         Ok(todo) => Ok(todo),

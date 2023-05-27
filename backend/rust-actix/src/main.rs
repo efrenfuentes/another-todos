@@ -1,15 +1,15 @@
 extern crate diesel;
 
-use actix_web::{middleware, web, http, App, HttpServer};
 use actix_cors::Cors;
+use actix_web::{middleware, web, App, HttpServer};
 use clap::Parser;
 use diesel::prelude::*;
 use diesel::r2d2::{self, ConnectionManager};
 
-mod models;
+mod args_parse;
 mod controllers;
 mod helpers;
-mod args_parse;
+mod models;
 
 use args_parse::Args;
 
@@ -33,22 +33,24 @@ async fn main() -> std::io::Result<()> {
 
     println!("Starting server on port {}", args.port);
 
-    HttpServer::new(move|| {
+    HttpServer::new(move || {
         let cors = Cors::permissive();
 
         App::new()
             .app_data(web::Data::new(pool.clone()))
             .wrap(cors)
             .wrap(middleware::Logger::default())
-            .service(web::scope("/v1")
-                .service(controllers::healthcheck::index)
-                .service(web::scope("/todos")
-                    .service(controllers::todos::index)
-                    .service(controllers::todos::show)
-                    .service(controllers::todos::create)
-                    .service(controllers::todos::update)
-                    .service(controllers::todos::delete)
-                )
+            .service(
+                web::scope("/v1")
+                    .service(controllers::healthcheck::index)
+                    .service(
+                        web::scope("/todos")
+                            .service(controllers::todos::index)
+                            .service(controllers::todos::show)
+                            .service(controllers::todos::create)
+                            .service(controllers::todos::update)
+                            .service(controllers::todos::delete),
+                    ),
             )
     })
     .bind(("0.0.0.0", args.port))?
