@@ -4,6 +4,7 @@ import (
 	"github.com/efrenfuentes/todo-backend-golang-fiber/database"
 	"github.com/efrenfuentes/todo-backend-golang-fiber/router"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 )
 
@@ -23,6 +24,7 @@ func main() {
 	database.ConnectDB()
 
 	app.Use(logger.New())
+	app.Use(cors.New(cors.ConfigDefault))
 
 	// setup routes
 	setupRoutes(app)
